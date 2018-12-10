@@ -1,10 +1,10 @@
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>Home | Marlin Firmware</title> <meta property="og:title" content="Home"> <meta name="author" content="MarlinFirmware"> <meta property="og:locale" content="en_US"> <meta name="description" content="Marlin, the most widely-used 3D printer firmware in the world"> <meta property="og:description" content="Marlin, the most widely-used 3D printer firmware in the world"> <link rel="canonical" href="http://marlinfw.org/"> <meta property="og:url" content="http://marlinfw.org/"> <meta property="og:site_name" content="Marlin Firmware"> <meta name="twitter:card" content="summary"> <meta name="twitter:site" content="@MarlinFirmware"> <meta name="twitter:creator" content="@MarlinFirmware"> <script type="application/ld+json">
-{"@context":"http://schema.org","@type":"WebSite","name":"Marlin Firmware","headline":"Home","author":{"@type":"Person","name":"MarlinFirmware"},"description":"Marlin, the most widely-used 3D printer firmware in the world","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://marlinfw.org/assets/images/logo/marlin/small.png"},"name":"MarlinFirmware"},"sameAs":["https://www.facebook.com/groups/1049718498464482/","http://forums.reprap.org/list.php?415"],"url":"http://marlinfw.org/"}</script> <link rel="icon" href="/assets/favicon.ico"> <link rel="stylesheet" href="/assets/stylesheets/main.css"> <!--[if lt IE 9]><script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script> <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]--> <script src="/assets/javascript/head.min.js"></script> <script type="text/javascript">
+{"@context":"http://schema.org","@type":"WebSite","name":"Marlin Firmware","headline":"Home","author":{"@type":"Person","name":"MarlinFirmware"},"description":"Marlin, the most widely-used 3D printer firmware in the world","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://marlinfw.org/assets/images/logo/marlin/small.png"},"name":"MarlinFirmware"},"sameAs":["https://www.facebook.com/groups/1049718498464482/","http://forums.reprap.org/list.php?415"],"url":"http://marlinfw.org/"}</script> <link rel="icon" href="/assets/favicon.ico"> <link rel="stylesheet" href="/assets/stylesheets/main.css"> <!--[if lt IE 9]><script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script> <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]--> <script src="/assets/javascript/head.min.js"></script> <script src="https://cse.google.com/cse.js?cx=008694880653106568020:x-ypfjispo4" async="true"></script> <script type="text/javascript">
       /**
        * As Github pages do not support https for custom domains
        * this is the current best workaround for #18.
        */
-      var domains  = ['marlinfw.org', 'localhost', '127.0.0.1' ];
+      var domains  = [ 'marlinfw.org', 'localhost', '127.0.0.1' ];
       var pathname = location.pathname.replace(/^\/MarlinDocumentation/, '')
       if (domains.indexOf(window.location.hostname) == -1)
           window.top.location.href = 'http://marlinfw.org' + pathname;
@@ -12,8 +12,8 @@
       /**
        * Another ugly workaround trying to improve UX reported by #35
        */
-       if (location.protocol != 'http:')
-           location.href = 'http:' + window.location.href.substring(window.location.protocol.length);
+      if (location.protocol != 'http:')
+        location.href = 'http:' + window.location.href.substring(window.location.protocol.length);
 
       /**
        * Improves overall speed by loading javascript and css resources in parallel
@@ -33,6 +33,7 @@
       );
 
       head.ready(function() {
+        $('#gcse').html("<gcse:search></gcse:search>");
         window.cookieconsent_options = {
           "message":"We use cookies to ensure you get the best experience on our website",
           "dismiss": "Got it!", "learnMore": "More info", "link":"", "theme": "dark-bottom"

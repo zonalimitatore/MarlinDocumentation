@@ -1,6 +1,6 @@
 ---
 title:        Linear Advance
-description:  Nozzle pressure control to improve print quality
+description:  Controllo della pressione dell'ugello per migliorare la qualità di stampa
 
 author: Sebastianv650, Sineos
 category: [ features, developer ]
@@ -8,45 +8,44 @@ category: [ features, developer ]
 
 <!-- ## Background -->
 
-Under default conditions, extruder axis movement is treated in the same way as the XYZ linear axes. The extruder motor moves in linear proportion to all the other motors, maintaining exactly the same acceleration profile and start/stop points. But an extruder is not a linear system, so this approach leads, most obviously, to extra material being extruded at the end of each linear movement.
+In condizioni predefinite, il movimento dell'asse dell'estrusore viene trattato allo stesso modo degli assi XYZ. Il motore dell'estrusore si muove in proporzione lineare rispetto a tutti gli altri motori, mantenendo esattamente lo stesso profilo di accelerazione e i punti di avvio / arresto. Ma un estrusore non è un sistema lineare, quindi questo approccio porta, molto ovviamente, al materiale extra che viene estruso alla fine di ogni movimento lineare.
 
-Take the common test-cube as an example. Even with the best tuning the corners are usually not sharp, but bleed out. The top solid infill displays roughness where the print direction changes on perimeters. These problems are minor or even imperceptible at low printing speeds, but they become more noticeable and problematic as print speeds increase.
+Prendi come esempio il comune cubo di prova. Anche con la migliore calibrazione, gli angoli di solito non sono nitidi, ma sembrano "goffi". Il riempimento solido superiore mostra la rugosità in cui la direzione di stampa cambia sui perimetri. Questi problemi sono minori o addirittura impercettibili a basse velocità di stampa, ma diventano più evidenti e problematici all'aumentare della velocità di stampa.
 
-Tuning the flow can help, but this may lead to under-extrusion when starting new lines. Some slicers include an option to end extrusion early in each move, but this adds more complexity to the G-code and has to be retuned for different temperatures and materials.
+La calibrazione del flusso può essere d'aiuto, ma ciò può portare a un'estrusione insufficiente quando si creano nuove linee. Alcuni slicer includono un'opzione per terminare l'estrusione prima di aver completato il percorso, ma questo aggiunge più complessità al codice G e deve essere ricalibrato per temperature e materiali diversi.
 
-Since the root cause is pressure, `LIN_ADVANCE` de-couples extrusion from the other axes to produce the correct pressure inside the nozzle, adapting to the printing speed. Once Linear Advance is properly tuned, bleeding edges and rough solid infill should be nearly eliminated.
+Siccome il problema è pressione, `LIN_ADVANCE` elimina l'estrusione dagli altri assi per produrre la pressione corretta all'interno dell'ugello, adattandosi alla velocità di stampa. Una volta che il Linear Advance è regolato correttamente, i bordi goffi e il riempimento solido ruvido dovrebbero essere quasi eliminati.
 <br>
-# Advantages
+# Vantaggi
 
-- Better dimensional precision due to reduced bleeding edges.
-- Higher printing speeds are possible without any loss of print quality - as long as your extruder can handle the needed speed changes.
-- Visible and tangible print quality is increased even at lower printing speeds.
-- No need for high acceleration and jerk values to get sharp edges.
-
+- Migliore precisione dimensionale grazie alla riduzione dei bordi goffi.
+- Sono possibili velocità di stampa più elevate senza alcuna perdita di qualità di stampa, a condizione che l'estrusore sia in grado di gestire i cambiamenti di velocità necessari.
+- La qualità di stampa visibile e tangibile viene aumentata anche a velocità di stampa inferiori.
+- Nessuna necessità di valori di accelerazione e jerk elevati per ottenere spigoli vivi.
 <br>
 
-# Special notes for v1.5
+# Note speciali per v1.5
 
 ## Changelog
 
-- K is now a meaningful value with the unit [mm of filament compression needed per 1mm/s extrusion speed] or [mm/mm/s].
-- Load inside stepper ISR reduced as no calculations are needed there any more. Instead, the extruder runs at a fixed speed offset during pressure adjustment. Therefore this version runs faster.
-- LIN_ADVANCE now respects hardware limitations set in Configuration.h, namely extruder jerk. If the pressure corrections require faster adjustments than allowed by extruder jerk limit, the acceleration for this print move is limited to a value which allows to use extruder jerk speed as the upper limit.
-- The pressure adjustment moves don't lead to a rattling extruder as it was in v1.0: as the extruder is now running at a smooth speed instead of jerking between multiples of extruder print speed.
-- This smooth extruder operation and respecting of jerk limits ensures no extruder steps are skipped.
+- K è ora un valore significativo con l'unità [mm di compressione del filamento necessaria per 1 mm/s di velocità d'estrusione] o [mm/mm/s].
+- Carico ridotti per gli stepper l'ISR,in quanto non vi sono più necessari calcoli. Invece, l'estrusore funziona con uno spostamento di velocità fisso durante la regolazione della pressione. Pertanto questa versione viene eseguita più velocemente.
+- LIN_ADVANCE ora rispetta le limitazioni hardware impostate in Configuration.h, ovvero jerk dell'estrusore. Se le correzioni della pressione richiedono regolazioni più rapide di quelle consentite dal limite dello strappo dell'estrusore, l'accelerazione per questo spostamento di stampa è limitata a un valore che consente di utilizzare la velocità dello strappo dell'estrusore come limite superiore.
+- I movimenti di regolazione della pressione non portano a un estrusore rumoroso come nella v1.0: l'estrusore ora funziona a velocità regolare invece di oscillare tra i multipli della velocità di stampa dell'estrusore.
+- Questa operazione dell'estrusore scorrevole e il rispetto dei limiti di jerk garantiscono che non vengano saltati passi dell'estrusore.
 
-## New K value required
+## Nuovo valore K richiesto
 
-As the unit of K has changed, you have to redo the K calibration procedure. See next chapter for details. While old v1 K values for PLA might be between 30-130, you can now expect K to be around 0.1-2.0.
+Poiché l'unità di K è cambiata, è necessario ripetere la procedura di calibrazione K. Vedi il prossimo capitolo per i dettagli. Mentre i vecchi valori v1 per PLA potrebbero essere tra 30-130, ora puoi aspettarti che K sia intorno a 0,1-2,0.
 
-## LIN_ADVANCE can reduce your print acceleration
+## LIN_ADVANCE può ridurre l'accelerazione di stampa
 
-In v1, if K was set to a high value which couldn't be handled by your printer, then the printer was losing steps and/or using all of it's processing power to execute extruder steps. In v1.5, this is handled much smarter. `LIN_ADVANCE` will now check if it can execute the advance steps as needed. If the needed extruder speed exceeds the extruder jerk limit, it will reduce the print acceleration for the line printed to a value which keeps the extruder speed within the limit.
+Nella v1, se K era impostato su un valore elevato che non poteva essere gestito dalla stampante, la stampante stava perdendo passi e/o usando tutta la sua potenza di elaborazione per eseguire i passi dell'estrusore. Nella v1.5, questo è gestito molto più intelligentemente. `LIN_ADVANCE` ora controllerà se è in grado di eseguire i passi secondo necessità. Se la velocità dell'estrusore necessaria supera il limite del jerk dell'estrusore, riduce l'accelerazione di stampa per la linea stampata su un valore che mantiene la velocità dell'estrusore entro il limite.
 
-While you will most likely not run into this on direct drive printers with filaments like PLA, it will happen most likely on bowden printers as they need higher K values and therefore faster speed adaptions. If this happens to an amount you don't want to accept, you have the following options:
-- Check your extruder jerk setting. If you have the feeling it is set to a very conservative value, try increasing it.
-- Keep the extruder acceleration low. This can be achieved by lowering the layer height or line width for example
-- Keep K as low as possible. Maybe you can shorten the bowden tube?
+Mentre molto probabilmente non si imbatteranno nelle stampanti direct drive con filamenti come il PLA, ciò avverrà molto probabilmente sulle stampanti bowden, in quanto hanno bisogno di valori K più alti e quindi di adattamenti della velocità più rapidi. Se questo accade in un modo che non vuoi accettare, hai le seguenti opzioni:
+- Controllare l'impostazione del jerk dell'estrusore. Se hai la sensazione che sia impostato su un valore molto conservativo, prova ad aumentarlo.
+- Mantenere l'accelerazione dell'estrusore bassa. Questo può essere ottenuto abbassando l'altezza del layer o la larghezza della linea, ad esempio.
+- Tieni K il più basso possibile. Forse puoi accorciare il tubo Bowden?
 
 ## A note on bowden printers vs. LIN_ADVANCE
 
